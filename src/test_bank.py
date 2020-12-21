@@ -32,7 +32,7 @@ class TestBank:
 
     # ----- Méthodes de classe -----
 
-    def import_files(self):
+    def import_points(self):
         """
         Importe tous les points défini dans la banque de test et retourne la liste des ensembles de points défini dans
         les fichiers
