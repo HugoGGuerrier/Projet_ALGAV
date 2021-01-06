@@ -3,6 +3,8 @@ from src.algorithms import naive_circle, welzl_circle, get_precision
 
 import os
 import time
+import sys
+import math
 
 
 class Tester:
@@ -23,6 +25,36 @@ class Tester:
 
         self.test_bank_dir = test_bank_dir
         self.test_banks = list()
+
+    # ----- Méthodes internes -----
+
+    def _display_test_state(self, passed_tests, total_tests):
+        """
+        Cette méthode sert à afficher l'état des tests, pour ne pas attendre 15 minutes pour rien
+
+        params :
+            - passed_tests = Le nombre de tests passés
+            - total_tests = Le nombre total de tests
+        """
+
+        prop = passed_tests / total_tests
+
+        done_number = math.floor(prop * 20)
+        leave_number = 20 - done_number
+
+        progress_bar = "\t[" + ("█" * done_number) + (" " * leave_number) + "] - " + str(passed_tests) + "/" + str(total_tests)
+
+        # Display the progress bar
+        sys.stdout.write(progress_bar)
+        sys.stdout.flush()
+
+        # Display a carriage return
+        if prop < 1:
+            sys.stdout.write("\r")
+            sys.stdout.flush()
+        else:
+            sys.stdout.write("\n")
+            sys.stdout.flush()
 
     # ----- Méthodes de classe -----
 
@@ -50,9 +82,22 @@ class Tester:
             files_sets = test_bank.import_points()
 
             # --- Dans un premier temps on parcourt tous les ensembles de points et on applique les deux algorithmes
+            # On compare ainsi la rapidité et l'efficacité de chaque méthode
 
             # On prépare la liste de résultats pour les premières mesures
             non_accu_results = list()
+
+            # On affiche la bar de progression
+            done = 0
+            total = len(files_sets)
+            self._display_test_state(done, total)
+
+            # On affiche le titre
+            print("====== Banque de tests : " + test_bank.bank_dir + " ======\n")
+            print("Nombre de fichiers de test : " + str(total) + "\n")
+
+            # On affiche les résultats pour la méthode sans accumulation des points
+            print("Méthode sans accumulation :")
 
             for point_set in files_sets:
                 result = dict()
@@ -82,19 +127,19 @@ class Tester:
 
                 non_accu_results.append(result)
 
+                # On met à jour la barre de progression
+                done += 1
+                self._display_test_state(done, total)
+
             # --- Le second test consiste à accumuler les points pour avoir un idée de la complexité et de l'évolution de la courbe
 
             # TODO
 
             # --- Affichage des resultats
 
-            print("====== Banque de tests : " + test_bank.bank_dir + " ======\n")
-            print("Nombre de fichiers de test : " + str(len(files_sets)) + "\n")
+            print("")
 
-            # On affiche les résultats pour la méthode sans accumulation des points
-            print("Méthode sans accumulation :\n")
-
-            format_str = "{test_nb:<20}| {point_nb:<20}| {naive_time:<30}| {welzl_time:<30}| {naive_prec:<20}| {welzl_prec:<20}"
+            format_str = "{test_nb:<20}| {point_nb:<20}| {naive_time:<20}| {welzl_time:<20}| {naive_prec:<20}| {welzl_prec:<20}"
 
             print(format_str.format(
                 test_nb="N° du test",
@@ -109,7 +154,6 @@ class Tester:
             accu_naive_prec = 0
             accu_welzl_time = 0
             accu_welzl_prec = 0
-            test_number = len(non_accu_results)
 
             for i in range(len(non_accu_results)):
                 result = non_accu_results[i]
@@ -122,13 +166,13 @@ class Tester:
                 print(format_str.format(
                     test_nb=str(i + 1),
                     point_nb=str(result["nb_points"]),
-                    naive_time=str(result["naive_time"]),
-                    welzl_time=str(result["welzl_time"]),
+                    naive_time=str(round(result["naive_time"], 10)),
+                    welzl_time=str(round(result["welzl_time"], 10)),
                     naive_prec=str(result["naive_precision"]),
                     welzl_prec=str(result["welzl_precision"]),
                 ))
 
-            print("\nTemps moyen pour la méthode naïve : " + str(accu_naive_time / test_number) + " s")
-            print("Temps moyen pour la méthode de Welzl : " + str(accu_welzl_time / test_number) + " s")
-            print("Précision moyenne pour la méthode naïve : " + str(accu_naive_prec / test_number))
-            print("Précision moyenne pour la méthode de Welzl : " + str(accu_welzl_prec / test_number))
+            print("\nTemps moyen pour la méthode naïve : " + str(accu_naive_time / total) + " s")
+            print("Temps moyen pour la méthode de Welzl : " + str(accu_welzl_time / total) + " s")
+            print("Précision moyenne pour la méthode naïve : " + str(accu_naive_prec / total))
+            print("Précision moyenne pour la méthode de Welzl : " + str(accu_welzl_prec / total))

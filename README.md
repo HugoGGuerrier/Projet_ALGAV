@@ -6,4 +6,5 @@
 
 ## Comment lancer les tests ?
 
-* `$ python3 main.py`
+* Lancer les tests de l'étude `$ python3 main.py`
+* Lancer les tests unitaires `$ python3 main.py test_unit`
