@@ -7,6 +7,7 @@ import time
 import sys
 import math
 import csv
+import random
 
 
 class Tester:
@@ -176,6 +177,7 @@ class Tester:
                         print("\n!!! Il n'y a pas assez de points disponibles !!!\n")
                         break
 
+                random.shuffle(point_accumulator)
                 point_set = set(point_accumulator)
 
                 # On effectue les tests sur l'accumulateur de points
