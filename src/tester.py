@@ -6,6 +6,7 @@ import os
 import time
 import sys
 import math
+import csv
 
 
 class Tester:
@@ -211,7 +212,34 @@ class Tester:
                 # On incrémente done
                 done += 1
 
-            # ===== Affichage des resultats =====
+            # ===== Exportation des résultats =====
+
+            # On ouvre les fichier CSV
+            non_accu_export_file = open(test_bank.name + "_non_accu_results.csv", "w", newline='')
+            accu_export_file = open(test_bank.name + "_accu_results.csv", "w", newline='')
+
+            # On défini le nom des colonnes
+            col_names = ["nb_points", "naive_time", "naive_precision", "welzl_time", "welzl_precision"]
+
+            # On créer les scribes CSV
+            na_writer = csv.DictWriter(non_accu_export_file, fieldnames=col_names)
+            na_writer.writeheader()
+            a_writer = csv.DictWriter(accu_export_file, fieldnames=col_names)
+            a_writer.writeheader()
+
+            # On exporte les résultats de non accumulation
+            for res in non_accu_results:
+                na_writer.writerow(res)
+
+            # On On exporte les résultats de l'accumulation
+            for res in accu_results:
+                a_writer.writerow(res)
+
+            # On fermes les fichiers
+            non_accu_export_file.close()
+            accu_export_file.close()
+
+            # ===== Affichage des résultats =====
 
             print("\n===== Résultats =====")
             print("\n--- Méthode sans accumulation :\n")
@@ -253,7 +281,9 @@ class Tester:
 
             print("\nNombre moyen de points dans un ensemble : " + str(total_point_nb / total_non_accu))
             print("Temps moyen pour la méthode naïve : " + str(total_naive_time / total_non_accu) + " s")
+            print("Temps total pour la méthode naïve : " + str(total_naive_time) + " s")
             print("Temps moyen pour la méthode de Welzl : " + str(total_welzl_time / total_non_accu) + " s")
+            print("Temps total pour la méthode de Welzl : " + str(total_welzl_time) + " s")
             print("Précision moyenne pour la méthode naïve : " + str(total_naive_prec / total_non_accu))
             print("Précision moyenne pour la méthode de Welzl : " + str(total_welzl_prec / total_non_accu))
 

@@ -24,6 +24,9 @@ class TestBank:
         self.bank_dir = bank_dir
         self.test_files = list()
 
+        # On récupère le nom de la banque de tests
+        self.name = bank_dir.split(os.path.sep)[-2]
+
         # On récupère tous les fichiers dans la banque de test
         for f in os.listdir(self.bank_dir):
             _, extension = os.path.splitext(f)
