@@ -9,8 +9,8 @@ import sys
 base_path = os.path.abspath(".") + os.path.sep
 
 # Définition des banques de tests à lire dans le répertoire "test_bank"
-# test_banks = ["Varoumas/samples"]
-test_banks = ["Hugo/samples"]
+test_banks = ["Varoumas/samples"]
+# test_banks = ["Hugo/samples"]
 
 # Lancement du programme principal
 if __name__ == "__main__":
